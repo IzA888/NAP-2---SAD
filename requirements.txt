@@ -1,1 +1,6 @@
 psycopg[binary]
+django
+djangorestframework
+matplotlib
+numpy
+celery

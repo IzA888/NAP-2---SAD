@@ -1,0 +1,39 @@
+{% extends "dashboard/base.html" %}
+{% block menu_content %}
+<h1 class="h2">Fluxo de Caixa</h1>
+<div class="card mt-4">
+    <div class="card-body">
+        <!-- Gráfico e dados do fluxo de caixa -->
+        <div id="fluxo-caixa-chart" style="height: 400px;"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Inicializar gráfico do fluxo de caixa
+    // Implementação do gráfico aqui
+    // Gráfico de Fluxo de Caixa
+    const fluxoCtx = document.getElementById('fluxoChart').getContext('2d');
+    new Chart(fluxoCtx, {
+        type: 'line',
+        data: {
+            labels: ['Última Semana', 'Últimos 6 Meses'],
+            datasets: [{
+                label: 'Saldo (R$)',
+                data: [
+                    {{ dados_semana.fluxo_caixa.saldo|default:0 }},
+                    {{ dados_seis_meses.fluxo_caixa.saldo|default:0 }}
+                ],
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2,
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+</script>
+{% endblock %}

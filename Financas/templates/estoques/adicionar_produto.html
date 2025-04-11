@@ -1,0 +1,143 @@
+{% extends "estoques/listar_produtos.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1>
+                {% if object %}Editar{% else %}Adicionar{% endif %} Produto
+                <small class="text-muted">Controle de Estoque</small>
+            </h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.codigo.label_tag }}
+                                    {{ form.codigo }}
+                                    {% if form.codigo.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.codigo.errors }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.nome.label_tag }}
+                                    {{ form.nome }}
+                                    {% if form.nome.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.nome.errors }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    {{ form.preco.label_tag }}
+                                    <div class="input-group">
+                                        <span class="input-group-text">R$</span>
+                                        {{ form.preco }}
+                                    </div>
+                                    {% if form.preco.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.preco.errors }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    {{ form.estoque.label_tag }}
+                                    {{ form.estoque }}
+                                    {% if form.estoque.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.estoque.errors }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    {{ form.estoque_minimo.label_tag }}
+                                    {{ form.estoque_minimo }}
+                                    {% if form.estoque_minimo.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.estoque_minimo.errors }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-group">
+                                {{ form.descricao.label_tag }}
+                                {{ form.descricao }}
+                                {% if form.descricao.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.descricao.errors }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'listar_produtos' %}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Voltar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save"></i> Salvar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Informações</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        Preencha todos os campos obrigatórios para {% if object %}atualizar{% else %}cadastrar{% endif %} o produto no sistema.
+                    </p>
+                    <ul class="list-group list-group-flush mb-3">
+                        <li class="list-group-item">
+                            <strong>Código:</strong> Deve ser único para cada produto
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Estoque mínimo:</strong> Define quando o produto está com estoque baixo
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Preço:</strong> Valor unitário de venda
+                        </li>
+                    </ul>
+                    {% if object %}
+                    <div class="alert alert-info">
+                        <small>
+                            <i class="bi bi-info-circle"></i> 
+                            Produto cadastrado em {{ object.data_cadastro|date:"d/m/Y H:i" }}
+                        </small>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

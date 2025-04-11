@@ -1,0 +1,113 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4>Comparativo de Vendas</h4>
+                </div>
+                <div class="card-body">
+                    <canvas id="vendasChart" height="200"></canvas>
+                    <div class="mt-3">
+                        <p><strong>Última Semana:</strong> R$ {{ dados_semana.vendas.total_vendas|floatformat:2 }}</p>
+                        <p><strong>Últimos 6 Meses:</strong> R$ {{ dados_seis_meses.vendas.total_vendas|floatformat:2 }}</p>
+                        <p class="{% if comparativo.vendas.variacao_percentual >= 0 %}text-success{% else %}text-danger{% endif %}">
+                            <strong>Variação:</strong> {{ comparativo.vendas.variacao_percentual|floatformat:2 }}%
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h4>Comparativo de Fluxo de Caixa</h4>
+                </div>
+                <div class="card-body">
+                    <canvas id="fluxoChart" height="200"></canvas>
+                    <div class="mt-3">
+                        <p><strong>Última Semana:</strong> R$ {{ dados_semana.fluxo_caixa.saldo|floatformat:2 }}</p>
+                        <p><strong>Últimos 6 Meses:</strong> R$ {{ dados_seis_meses.fluxo_caixa.saldo|floatformat:2 }}</p>
+                        <p class="{% if comparativo.fluxo_caixa.variacao_percentual >= 0 %}text-success{% else %}text-danger{% endif %}">
+                            <strong>Variação:</strong> {{ comparativo.fluxo_caixa.variacao_percentual|floatformat:2 }}%
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Adicione Chart.js no seu template -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+// Gráfico de Vendas
+document.addEventListener('DOMContentLoaded', function() {
+    const vendasCtx = document.getElementById('vendasChart').getContext('2d');
+    new Chart(vendasCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Última Semana', 'Últimos 6 Meses'],
+            datasets: [{
+                label: 'Total de Vendas (R$)',
+                data: [
+                    {{ dados_semana.vendas.total_vendas|default:0 }},
+                    {{ dados_seis_meses.vendas.total_vendas|default:0 }}
+                ],
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(255, 99, 132, 0.5)'
+                ],
+                borderColor: [
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Gráfico de Fluxo de Caixa
+    const fluxoCtx = document.getElementById('fluxoChart').getContext('2d');
+    new Chart(fluxoCtx, {
+        type: 'line',
+        data: {
+            labels: ['Última Semana', 'Últimos 6 Meses'],
+            datasets: [{
+                label: 'Saldo (R$)',
+                data: [
+                    {{ dados_semana.fluxo_caixa.saldo|default:0 }},
+                    {{ dados_seis_meses.fluxo_caixa.saldo|default:0 }}
+                ],
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2,
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+});
+</script>
+{% endblock %}
+
+{% if erro %}
+<div class="alert alert-danger">
+    {{ erro }}
+</div>
+{% endif %}

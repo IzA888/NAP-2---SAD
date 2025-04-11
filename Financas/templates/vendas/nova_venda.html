@@ -1,0 +1,110 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">Nova Venda</h1>
+            
+            <div class="card">
+                <div class="card-body">
+                    <form id="form-venda">
+                        {% csrf_token %}
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Cliente</label>
+                                    {{ form_venda.cliente }}
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Forma de Pagamento</label>
+                                    {{ form_venda.forma_pagamento }}
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Desconto (R$)</label>
+                                    {{ form_venda.desconto }}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4>Itens da Venda</h4>
+                                <table class="table" id="tabela-itens">
+                                    <thead>
+                                        <tr>
+                                            <th width="40%">Produto</th>
+                                            <th width="15%">Preço Unit.</th>
+                                            <th width="15%">Quantidade</th>
+                                            <th width="15%">Subtotal</th>
+                                            <th width="15%">Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="itens-venda">
+                                        <!-- Itens serão adicionados aqui via JS -->
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="3" class="text-right"><strong>Total:</strong></td>
+                                            <td colspan="2" id="valor-total">R$ 0,00</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                                
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label>Adicionar Produto</label>
+                                            {{ form_item.produto }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label>Quantidade</label>
+                                            {{ form_item.quantidade }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 d-flex align-items-end">
+                                        <button type="button" class="btn btn-primary w-100" id="btn-adicionar">
+                                            Adicionar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label>Observações</label>
+                                    {{ form_venda.observacoes }}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-12 text-right">
+                                <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancelar</a>
+                                <button type="submit" class="btn btn-success">Finalizar Venda</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'vendas/js/nova_venda.js' %}"></script>
+<script>
+    const produtos = {{ produtos_json|safe }};
+</script>
+{% endblock %}
